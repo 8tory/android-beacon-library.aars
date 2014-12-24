@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+out="/tmp/m2repository"
+url="file://${out}"
+# repositoryId=parse
+file=
+groupId=com.infstory
+artifactId=android-beacon-library
+version=
+packaging=aar
+# generatePom=false
+
+javadoc=
+
+for i in *.aar; do
+    case "$i" in
+        android-beacon-library-*.aar) # Parse-1.8.0.jar
+            file="$i"
+            version="${i##android-beacon-library-}"
+            version="${version%.aar}"
+            mvn org.apache.maven.plugins:maven-deploy-plugin:2.8.2:deploy-file -Durl="$url" \
+                                                                               -Dfile="$file" \
+                                                                               -DgroupId="$groupId" \
+                                                                               -DartifactId="$artifactId" \
+                                                                               -Dversion="$version"
+                                                                               #-Dpackaging="$packaging" \
+                                                                               #-Djavadoc="$javadoc" \
+            echo $file
+            echo $version
+        ;;
+    esac
+done
